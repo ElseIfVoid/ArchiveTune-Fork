@@ -344,14 +344,8 @@ class DiscordRPC(
     private suspend fun resolveButtons(song: Song): List<DiscordPresenceButton> {
         val button1Label = context.dataStore[DiscordActivityButton1LabelKey] ?: "Listen on YouTube Music"
         val button1Enabled = context.dataStore[DiscordActivityButton1EnabledKey] ?: true
-        val button2Label = context.dataStore[DiscordActivityButton2LabelKey] ?: "Go to ArchiveTune"
-        val button2Enabled = context.dataStore[DiscordActivityButton2EnabledKey] ?: true
         val button1UrlSource = context.dataStore[DiscordActivityButton1UrlSourceKey] ?: "songurl"
         val button1CustomUrl = context.dataStore[DiscordActivityButton1CustomUrlKey] ?: ""
-        val button2UrlSource = context.dataStore[DiscordActivityButton2UrlSourceKey] ?: "custom"
-        val button2CustomUrl =
-            context.dataStore[DiscordActivityButton2CustomUrlKey]
-                ?: "https://github.com/rukamori/ArchiveTune"
 
         return buildList {
             if (button1Enabled) {
@@ -360,14 +354,7 @@ class DiscordRPC(
                     add(DiscordPresenceButton(button1Label.toButtonLabel(), url))
                 }
             }
-
-            if (button2Enabled) {
-                val url = resolveUrl(button2UrlSource, song, button2CustomUrl)
-                if (button2Label.isNotBlank() && !url.isNullOrBlank()) {
-                    add(DiscordPresenceButton(button2Label.toButtonLabel(), url))
-                }
-            }
-        }.take(2)
+        }.take(1)
     }
 
     private fun resolveUrl(

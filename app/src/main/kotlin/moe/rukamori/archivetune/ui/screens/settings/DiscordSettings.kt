@@ -74,8 +74,8 @@ enum class ActivitySource { ARTIST, ALBUM, SONG, APP, CUSTOM }
 
 private enum class DiscordAuthorizationUiMode { Idle, Waiting, Success, Failure }
 
-private val DiscordImageOptions = listOf("thumbnail", "artist", "appicon", "custom")
-private val DiscordSmallImageOptions = listOf("thumbnail", "artist", "appicon", "custom", "dontshow")
+private val DiscordImageOptions = listOf("thumbnail", "artist", "custom")
+private val DiscordSmallImageOptions = listOf("thumbnail", "artist", "custom", "dontshow")
 private val DiscordActivityStatusOptions = listOf("online", "dnd", "idle", "streaming")
 private val DiscordPlatformOptions = listOf("desktop", "xbox", "samsung", "ios", "android", "embedded", "ps4", "ps5")
 private val DiscordActivityTypeOptions = listOf("PLAYING", "STREAMING", "LISTENING", "WATCHING", "COMPETING")
@@ -1247,7 +1247,6 @@ private fun discordImageTypeLabel(value: String): String =
     when (value.lowercase()) {
         "thumbnail" -> stringResource(R.string.discord_image_album_artwork)
         "artist" -> stringResource(R.string.discord_image_artist_artwork)
-        "appicon" -> stringResource(R.string.app_icon)
         "custom" -> stringResource(R.string.custom)
         "dontshow" -> stringResource(R.string.dont_show)
         else -> value
@@ -1446,7 +1445,7 @@ fun RichPresence(
                                 when (largeImageType.lowercase()) {
                                     "thumbnail" -> song?.song?.thumbnailUrl
                                     "artist" -> song?.artists?.firstOrNull()?.thumbnailUrl
-                                    "appicon" -> "https://raw.githubusercontent.com/rukamori/ArchiveTune/main/fastlane/metadata/android/en-US/images/icon.png"
+
                                     "custom" -> largeImageCustomUrl.ifBlank { song?.song?.thumbnailUrl }
                                     else -> song?.song?.thumbnailUrl
                                 }
@@ -1476,7 +1475,7 @@ fun RichPresence(
                                 when (smallImageType.lowercase()) {
                                     "thumbnail" -> songThumb
                                     "artist" -> artistThumb
-                                    "appicon" -> "https://raw.githubusercontent.com/rukamori/ArchiveTune/main/fastlane/metadata/android/en-US/images/icon.png"
+
                                     "custom" -> smallImageCustomUrl.takeIf { it.isNotBlank() } ?: songThumb
                                     "dontshow", "none" -> null
                                     else -> artistThumb

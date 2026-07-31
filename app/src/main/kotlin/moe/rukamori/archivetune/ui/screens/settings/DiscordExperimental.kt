@@ -59,16 +59,7 @@ fun DiscordExperimental(navController: NavController) {
             key = DiscordActivityButton1EnabledKey,
             defaultValue = true,
         )
-    val (button2Label, onButton2LabelChange) =
-        rememberPreference(
-            key = DiscordActivityButton2LabelKey,
-            defaultValue = "Go to ArchiveTune",
-        )
-    val (button2Enabled, onButton2EnabledChange) =
-        rememberPreference(
-            key = DiscordActivityButton2EnabledKey,
-            defaultValue = true,
-        )
+
 
     val (button1UrlSource, onButton1UrlSourceChange) =
         rememberPreference(
@@ -80,16 +71,7 @@ fun DiscordExperimental(navController: NavController) {
             key = DiscordActivityButton1CustomUrlKey,
             defaultValue = "",
         )
-    val (button2UrlSource, onButton2UrlSourceChange) =
-        rememberPreference(
-            key = DiscordActivityButton2UrlSourceKey,
-            defaultValue = "custom",
-        )
-    val (button2CustomUrl, onButton2CustomUrlChange) =
-        rememberPreference(
-            key = DiscordActivityButton2CustomUrlKey,
-            defaultValue = "https://github.com/rukamori/ArchiveTune",
-        )
+
 
     Scaffold { inner ->
         Column(Modifier.fillMaxSize()) {
@@ -188,46 +170,7 @@ fun DiscordExperimental(navController: NavController) {
                             )
                         }
 
-                        item {
-                            SwitchPreference(
-                                title = { Text(stringResource(R.string.show_button)) },
-                                description = stringResource(R.string.show_button2_description),
-                                icon = { Icon(painterResource(R.drawable.buttons), null) },
-                                checked = button2Enabled,
-                                onCheckedChange = onButton2EnabledChange,
-                            )
-                        }
 
-                        item(visible = button2Enabled) {
-                            ListPreference(
-                                title = { Text(stringResource(R.string.discord_activity_button_2_url)) },
-                                icon = { Icon(painterResource(R.drawable.link), null) },
-                                selectedValue = button2UrlSource,
-                                values = DiscordExperimentalButtonUrlOptions,
-                                valueText = { discordExperimentalButtonUrlSourceLabel(it) },
-                                onValueSelected = onButton2UrlSourceChange,
-                            )
-                        }
-
-                        item(visible = button2Enabled) {
-                            EditTextPreference(
-                                title = { Text(stringResource(R.string.discord_activity_button2_label)) },
-                                icon = { Icon(painterResource(R.drawable.buttons), null) },
-                                value = button2Label,
-                                onValueChange = onButton2LabelChange,
-                                isInputValid = { true },
-                            )
-                        }
-
-                        item(visible = button2Enabled && button2UrlSource == "custom") {
-                            EditTextPreference(
-                                title = { Text(stringResource(R.string.discord_activity_button2_url)) },
-                                icon = { Icon(painterResource(R.drawable.link), null) },
-                                value = button2CustomUrl,
-                                onValueChange = onButton2CustomUrlChange,
-                                isInputValid = { true },
-                            )
-                        }
                     }
                 }
             }

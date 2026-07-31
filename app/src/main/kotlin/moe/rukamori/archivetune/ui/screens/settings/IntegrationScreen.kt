@@ -28,8 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import moe.rukamori.archivetune.LocalPlayerAwareWindowInsets
 import moe.rukamori.archivetune.R
-import moe.rukamori.archivetune.constants.ListenBrainzEnabledKey
-import moe.rukamori.archivetune.constants.ListenBrainzTokenKey
+
 import moe.rukamori.archivetune.ui.component.IconButton
 import moe.rukamori.archivetune.ui.component.InfoLabel
 import moe.rukamori.archivetune.ui.component.PreferenceEntry
@@ -42,10 +41,7 @@ import moe.rukamori.archivetune.utils.rememberPreference
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IntegrationScreen(navController: NavController) {
-    val (listenBrainzEnabled, onListenBrainzEnabledChange) = rememberPreference(ListenBrainzEnabledKey, false)
-    val (listenBrainzToken, onListenBrainzTokenChange) = rememberPreference(ListenBrainzTokenKey, "")
 
-    var showListenBrainzTokenEditor = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -97,55 +93,8 @@ fun IntegrationScreen(navController: NavController) {
                     )
                 }
 
-                item {
-                    SwitchPreference(
-                        title = { Text(stringResource(R.string.listenbrainz_scrobbling)) },
-                        description = stringResource(R.string.listenbrainz_scrobbling_description),
-                        icon = { Icon(painterResource(R.drawable.token), null) },
-                        checked = listenBrainzEnabled,
-                        onCheckedChange = onListenBrainzEnabledChange,
-                    )
-                }
-
-                item {
-                    PreferenceEntry(
-                        title = {
-                            Text(
-                                if (listenBrainzToken.isBlank()) {
-                                    stringResource(
-                                        R.string.set_listenbrainz_token,
-                                    )
-                                } else {
-                                    stringResource(R.string.edit_listenbrainz_token)
-                                },
-                            )
-                        },
-                        icon = { Icon(painterResource(R.drawable.token), null) },
-                        onClick = { showListenBrainzTokenEditor.value = true },
-                    )
-                }
             }
         }
     }
 
-    if (showListenBrainzTokenEditor.value) {
-        TextFieldDialog(
-            initialTextFieldValue =
-                androidx.compose.ui.text.input
-                    .TextFieldValue(listenBrainzToken),
-            onDone = { data ->
-                onListenBrainzTokenChange(data)
-                showListenBrainzTokenEditor.value = false
-            },
-            onDismiss = { showListenBrainzTokenEditor.value = false },
-            singleLine = true,
-            maxLines = 1,
-            isInputValid = {
-                it.isNotEmpty()
-            },
-            extraContent = {
-                InfoLabel(text = stringResource(R.string.listenbrainz_scrobbling_description))
-            },
-        )
-    }
 }

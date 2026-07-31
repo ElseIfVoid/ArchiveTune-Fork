@@ -223,7 +223,7 @@ class BackupArchiveRepository
                     "lastfmCustomEndpoint",
                     "lastfmApiKeyOverride",
                     "lastfmSecretOverride",
-                    "listenbrainz_token",
+
                     "discordToken",
                     "discordUsername",
                     "discordName",
