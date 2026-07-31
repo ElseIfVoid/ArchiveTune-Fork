@@ -119,7 +119,7 @@ class AppIconRepository
                         name = null,
                         author = null,
                         githubAuthorUrl = null,
-                        previewDrawableResId = R.mipmap.ic_launcher,
+                        previewDrawableResId = R.drawable.app_icon_small,
                         aliasClassName = "${context.packageName}.launcher.DefaultIconAlias",
                         isDefault = true,
                     ),

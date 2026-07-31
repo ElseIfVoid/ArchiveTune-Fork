@@ -876,7 +876,7 @@ private fun SurfaceAppIcon(modifier: Modifier = Modifier) {
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     ) {
         Image(
-            painter = painterResource(R.mipmap.ic_launcher),
+            painter = painterResource(R.drawable.app_icon_small),
             contentDescription = null,
             modifier =
                 Modifier

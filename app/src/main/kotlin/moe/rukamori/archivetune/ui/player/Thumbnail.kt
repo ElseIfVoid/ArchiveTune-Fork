@@ -509,7 +509,7 @@ fun Thumbnail(
                                         contentAlignment = Alignment.Center,
                                     ) {
                                         Image(
-                                            painter = painterResource(R.mipmap.ic_launcher),
+                                            painter = painterResource(R.drawable.app_icon_small),
                                             contentDescription = stringResource(R.string.hide_player_thumbnail),
                                             modifier = Modifier.size(120.dp),
                                         )
