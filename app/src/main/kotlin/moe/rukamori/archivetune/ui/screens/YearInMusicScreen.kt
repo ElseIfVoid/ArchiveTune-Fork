@@ -1239,7 +1239,7 @@ private fun ArchiveTuneBrand(
         horizontalArrangement = Arrangement.spacedBy(7.dp),
     ) {
         Image(
-            painter = painterResource(R.drawable.app_icon_small),
+            painter = painterResource(R.mipmap.ic_launcher),
             contentDescription = null,
             modifier = Modifier.size(20.dp),
         )

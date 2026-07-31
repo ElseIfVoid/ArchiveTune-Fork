@@ -64,12 +64,24 @@ val discordApplicationId =
         ).trim()
 val discordApplicationIdLong = discordApplicationId.toLongOrNull() ?: 1165706613961789445L
 val discordRedirectScheme = "discord-$discordApplicationId"
+// Load keystore.properties for local signing (gitignored)
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(keystorePropertiesFile.inputStream())
+}
+
 val releaseKeystoreFile = file("keystore/release.keystore")
 val releaseStorePassword =
-    System.getenv("STORE_PASSWORD")?.takeIf { it.isNotBlank() }
+    keystoreProperties.getProperty("KEYSTORE_PASSWORD")
+        ?: System.getenv("STORE_PASSWORD")?.takeIf { it.isNotBlank() }
         ?: System.getenv("KEYSTORE_PASSWORD")?.takeIf { it.isNotBlank() }
-val releaseKeyAlias = System.getenv("KEY_ALIAS")?.takeIf { it.isNotBlank() }
-val releaseKeyPassword = System.getenv("KEY_PASSWORD")?.takeIf { it.isNotBlank() }
+val releaseKeyAlias =
+    keystoreProperties.getProperty("KEY_ALIAS")
+        ?: System.getenv("KEY_ALIAS")?.takeIf { it.isNotBlank() }
+val releaseKeyPassword =
+    keystoreProperties.getProperty("KEY_PASSWORD")
+        ?: System.getenv("KEY_PASSWORD")?.takeIf { it.isNotBlank() }
 val hasReleaseSigningConfig =
     releaseKeystoreFile.isFile &&
         releaseStorePassword != null &&
@@ -102,7 +114,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-    applicationId = "moe.rukamori.archivetune"
+    applicationId = "moe.elseifvoid.archivetune"
         minSdk = 26
         targetSdk = 37
         versionCode = 139

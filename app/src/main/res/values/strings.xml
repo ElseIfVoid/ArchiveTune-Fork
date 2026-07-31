@@ -752,10 +752,14 @@
     <string name="discord_activity_state">Activity state</string>
     <string name="discord_activity_button_1_url">Button 1 URL Source</string>
     <string name="discord_activity_button_2_url">Button 2 URL Source</string>
-    <string name="discord_activity_button1_label">Button 1 label</string>
-    <string name="discord_activity_button1_url">Button 1 Custom URL</string>
+    <string name="discord_activity_button1_label">Button label</string>
+    <string name="discord_activity_button1_url">Button Custom URL</string>
     <string name="discord_activity_button2_label">Button 2 label</string>
     <string name="discord_activity_button2_url">Button 2 Custom URL</string>
+    <string name="discord_activity_name_custom_text">Custom name text</string>
+    <string name="discord_activity_details_custom_text">Custom details text</string>
+    <string name="discord_activity_state_custom_text">Custom state text</string>
+    <string name="discord_show_button1">Show button</string>
     <string name="discord_url_source_song">Song URL</string>
     <string name="discord_url_source_artist">Artist URL</string>
     <string name="discord_url_source_album">Album URL</string>

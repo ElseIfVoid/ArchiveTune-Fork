@@ -386,7 +386,7 @@ private fun MiniPlayerArtwork(
                 )
             } else {
                 Image(
-                    painter = painterResource(R.drawable.about_splash),
+                    painter = painterResource(R.mipmap.ic_launcher),
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
                 )

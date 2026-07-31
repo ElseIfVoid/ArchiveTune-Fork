@@ -334,6 +334,11 @@ val DiscordActivityButton1EnabledKey = booleanPreferencesKey("discordActivityBut
 val DiscordActivityButton2EnabledKey = booleanPreferencesKey("discordActivityButton2Enabled")
 val DiscordShowWhenPausedKey = booleanPreferencesKey("discordShowWhenPaused")
 
+// Custom text values when ActivitySource.CUSTOM is selected
+val DiscordActivityNameCustomTextKey = stringPreferencesKey("discordActivityNameCustomText")
+val DiscordActivityDetailsCustomTextKey = stringPreferencesKey("discordActivityDetailsCustomText")
+val DiscordActivityStateCustomTextKey = stringPreferencesKey("discordActivityStateCustomText")
+
 // Activity type for Discord presence (PLAYING, STREAMING, LISTENING, WATCHING, COMPETING)
 val DiscordActivityTypeKey = stringPreferencesKey("discordActivityType")
 val DiscordPresenceStatusKey = stringPreferencesKey("discordPresenceStatus") // "ONLINE", "IDLE", "DND", "INVISIBLE"

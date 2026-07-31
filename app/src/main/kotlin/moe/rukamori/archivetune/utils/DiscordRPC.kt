@@ -20,9 +20,12 @@ import moe.rukamori.archivetune.constants.DiscordActivityButton2CustomUrlKey
 import moe.rukamori.archivetune.constants.DiscordActivityButton2EnabledKey
 import moe.rukamori.archivetune.constants.DiscordActivityButton2LabelKey
 import moe.rukamori.archivetune.constants.DiscordActivityButton2UrlSourceKey
+import moe.rukamori.archivetune.constants.DiscordActivityDetailsCustomTextKey
 import moe.rukamori.archivetune.constants.DiscordActivityDetailsKey
+import moe.rukamori.archivetune.constants.DiscordActivityNameCustomTextKey
 import moe.rukamori.archivetune.constants.DiscordActivityNameKey
 import moe.rukamori.archivetune.constants.DiscordActivityPlatformKey
+import moe.rukamori.archivetune.constants.DiscordActivityStateCustomTextKey
 import moe.rukamori.archivetune.constants.DiscordActivityStateKey
 import moe.rukamori.archivetune.constants.DiscordActivityTypeKey
 import moe.rukamori.archivetune.constants.DiscordLargeImageCustomUrlKey
@@ -92,6 +95,9 @@ class DiscordRPC(
         val namePref = context.dataStore[DiscordActivityNameKey] ?: "APP"
         val detailsPref = context.dataStore[DiscordActivityDetailsKey] ?: "SONG"
         val statePref = context.dataStore[DiscordActivityStateKey] ?: "ARTIST"
+        val nameCustomText = context.dataStore[DiscordActivityNameCustomTextKey] ?: ""
+        val detailsCustomText = context.dataStore[DiscordActivityDetailsCustomTextKey] ?: ""
+        val stateCustomText = context.dataStore[DiscordActivityStateCustomTextKey] ?: ""
 
         val activityName =
             sourceValue(
@@ -99,6 +105,7 @@ class DiscordRPC(
                 song = song,
                 translatedMap = translatedMap,
                 default = appName,
+                customText = nameCustomText,
             )
 
         val activityDetails =
@@ -107,6 +114,7 @@ class DiscordRPC(
                 song = song,
                 translatedMap = translatedMap,
                 default = song.song.title.ifBlank { appName },
+                customText = detailsCustomText,
             ).toDiscordText(maxLength = 128, fallback = song.song.title.ifBlank { appName })
 
         val activityState =
@@ -115,6 +123,7 @@ class DiscordRPC(
                 song = song,
                 translatedMap = translatedMap,
                 default = song.artists.joinToString { it.name }.ifBlank { appName },
+                customText = stateCustomText,
             ).toDiscordText(maxLength = 128, fallback = appName)
 
         val baseSongUrl = song.youtubeMusicUrl()
@@ -288,12 +297,14 @@ class DiscordRPC(
         song: Song,
         translatedMap: Map<String, String>,
         default: String,
+        customText: String = "",
     ): String =
         when (pref.uppercase()) {
             "ARTIST" -> translatedMap["{artist}"] ?: song.artists.joinToString { it.name }.ifBlank { default }
             "ALBUM" -> translatedMap["{album}"] ?: song.song.albumName ?: song.album?.title ?: default
             "SONG" -> translatedMap["{song}"] ?: song.song.title.ifBlank { default }
             "APP" -> context.getString(R.string.app_name)
+            "CUSTOM" -> customText.ifBlank { default }
             else -> default
         }
 

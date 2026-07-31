@@ -875,12 +875,9 @@ private fun SurfaceAppIcon(modifier: Modifier = Modifier) {
         color = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     ) {
-        val iconTint = MaterialTheme.colorScheme.onPrimaryContainer
-        val iconColorFilter = remember(iconTint) { ColorFilter.tint(iconTint) }
         Image(
-            painter = painterResource(R.drawable.about_splash),
+            painter = painterResource(R.mipmap.ic_launcher),
             contentDescription = null,
-            colorFilter = iconColorFilter,
             modifier =
                 Modifier
                     .padding(AboutSpacing.sm)

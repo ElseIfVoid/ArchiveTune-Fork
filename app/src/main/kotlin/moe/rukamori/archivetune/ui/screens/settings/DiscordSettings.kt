@@ -70,7 +70,7 @@ import moe.rukamori.archivetune.utils.rememberEnumPreference
 import moe.rukamori.archivetune.utils.rememberPreference
 import timber.log.Timber
 
-enum class ActivitySource { ARTIST, ALBUM, SONG, APP }
+enum class ActivitySource { ARTIST, ALBUM, SONG, APP, CUSTOM }
 
 private enum class DiscordAuthorizationUiMode { Idle, Waiting, Success, Failure }
 
@@ -308,35 +308,36 @@ fun DiscordSettings(navController: NavController) {
             defaultValue = ActivitySource.ARTIST,
         )
 
-    val (button1Label) =
+    val (button1Label, onButton1LabelChange) =
         rememberPreference(
             key = DiscordActivityButton1LabelKey,
             defaultValue = "Listen on YouTube Music",
         )
-    val (button1Enabled) =
+    val (button1Enabled, onButton1EnabledChange) =
         rememberPreference(
             key = DiscordActivityButton1EnabledKey,
             defaultValue = true,
         )
-    val (button2Label) =
-        rememberPreference(
-            key = DiscordActivityButton2LabelKey,
-            defaultValue = "Go to ArchiveTune",
-        )
-    val (button2Enabled) =
-        rememberPreference(
-            key = DiscordActivityButton2EnabledKey,
-            defaultValue = true,
-        )
-    val (button1UrlSource) =
+    val (button1UrlSource, onButton1UrlSourceChange) =
         rememberPreference(
             key = DiscordActivityButton1UrlSourceKey,
             defaultValue = "songurl",
         )
-    val (button1CustomUrl) =
+    val (button1CustomUrl, onButton1CustomUrlChange) =
         rememberPreference(
             key = DiscordActivityButton1CustomUrlKey,
             defaultValue = "",
+        )
+    // button2 is removed from UI — kept disabled in prefs
+    val (button2Label) =
+        rememberPreference(
+            key = DiscordActivityButton2LabelKey,
+            defaultValue = "",
+        )
+    val (button2Enabled) =
+        rememberPreference(
+            key = DiscordActivityButton2EnabledKey,
+            defaultValue = false,
         )
     val (button2UrlSource) =
         rememberPreference(
@@ -346,7 +347,7 @@ fun DiscordSettings(navController: NavController) {
     val (button2CustomUrl) =
         rememberPreference(
             key = DiscordActivityButton2CustomUrlKey,
-            defaultValue = "https://github.com/rukamori/ArchiveTune",
+            defaultValue = "",
         )
 
     val (activityType, onActivityTypeChange) =
@@ -367,6 +368,23 @@ fun DiscordSettings(navController: NavController) {
     val (largeTextCustom, onLargeTextCustomChange) =
         rememberPreference(
             key = DiscordLargeTextCustomKey,
+            defaultValue = "",
+        )
+
+    // Custom text prefs for name / details / state
+    val (nameCustomText, onNameCustomTextChange) =
+        rememberPreference(
+            key = DiscordActivityNameCustomTextKey,
+            defaultValue = "",
+        )
+    val (detailsCustomText, onDetailsCustomTextChange) =
+        rememberPreference(
+            key = DiscordActivityDetailsCustomTextKey,
+            defaultValue = "",
+        )
+    val (stateCustomText, onStateCustomTextChange) =
+        rememberPreference(
+            key = DiscordActivityStateCustomTextKey,
             defaultValue = "",
         )
 
@@ -562,6 +580,15 @@ fun DiscordSettings(navController: NavController) {
                             icon = { Icon(painterResource(R.drawable.text_fields), null) },
                         )
                     }
+                    item(visible = nameSource == ActivitySource.CUSTOM) {
+                        EditTextPreference(
+                            title = { Text(stringResource(R.string.discord_activity_name_custom_text)) },
+                            icon = { Icon(painterResource(R.drawable.edit), null) },
+                            value = nameCustomText,
+                            onValueChange = onNameCustomTextChange,
+                            isInputValid = { true },
+                        )
+                    }
                     item {
                         EnumListPreference(
                             title = { Text(stringResource(R.string.discord_activity_details)) },
@@ -571,6 +598,15 @@ fun DiscordSettings(navController: NavController) {
                             icon = { Icon(painterResource(R.drawable.text_fields), null) },
                         )
                     }
+                    item(visible = detailsSource == ActivitySource.CUSTOM) {
+                        EditTextPreference(
+                            title = { Text(stringResource(R.string.discord_activity_details_custom_text)) },
+                            icon = { Icon(painterResource(R.drawable.edit), null) },
+                            value = detailsCustomText,
+                            onValueChange = onDetailsCustomTextChange,
+                            isInputValid = { true },
+                        )
+                    }
                     item {
                         EnumListPreference(
                             title = { Text(stringResource(R.string.discord_activity_state)) },
@@ -578,6 +614,15 @@ fun DiscordSettings(navController: NavController) {
                             onValueSelected = onStateSourceChange,
                             valueText = { activitySourceLabel(it) },
                             icon = { Icon(painterResource(R.drawable.text_fields), null) },
+                        )
+                    }
+                    item(visible = stateSource == ActivitySource.CUSTOM) {
+                        EditTextPreference(
+                            title = { Text(stringResource(R.string.discord_activity_state_custom_text)) },
+                            icon = { Icon(painterResource(R.drawable.edit), null) },
+                            value = stateCustomText,
+                            onValueChange = onStateCustomTextChange,
+                            isInputValid = { true },
                         )
                     }
 
@@ -678,6 +723,9 @@ fun DiscordSettings(navController: NavController) {
                     nameSource = nameSource,
                     detailsSource = detailsSource,
                     stateSource = stateSource,
+                    nameCustomText = nameCustomText,
+                    detailsCustomText = detailsCustomText,
+                    stateCustomText = stateCustomText,
                     activityType = activityType,
                     largeImageType = largeImageType,
                     largeImageCustomUrl = largeImageCustomUrl,
@@ -695,6 +743,47 @@ fun DiscordSettings(navController: NavController) {
                     button2CustomUrl = button2CustomUrl,
                     isPlaying = playerConnection.player.isPlaying,
                 )
+            }
+
+            item {
+                PreferenceGroup(title = stringResource(R.string.discord_button_options)) {
+                    item {
+                        SwitchPreference(
+                            title = { Text(stringResource(R.string.discord_show_button1)) },
+                            icon = { Icon(painterResource(R.drawable.link), null) },
+                            checked = button1Enabled,
+                            onCheckedChange = onButton1EnabledChange,
+                        )
+                    }
+                    item(visible = button1Enabled) {
+                        EditTextPreference(
+                            title = { Text(stringResource(R.string.discord_activity_button1_label)) },
+                            icon = { Icon(painterResource(R.drawable.edit), null) },
+                            value = button1Label,
+                            onValueChange = onButton1LabelChange,
+                            isInputValid = { it.isNotBlank() },
+                        )
+                    }
+                    item(visible = button1Enabled) {
+                        ListPreference(
+                            title = { Text(stringResource(R.string.discord_activity_button_1_url)) },
+                            icon = { Icon(painterResource(R.drawable.link), null) },
+                            selectedValue = button1UrlSource,
+                            values = listOf("songurl", "artisturl", "albumurl", "custom"),
+                            valueText = { discordUrlSourceLabel(it) },
+                            onValueSelected = onButton1UrlSourceChange,
+                        )
+                    }
+                    item(visible = button1Enabled && button1UrlSource == "custom") {
+                        EditTextPreference(
+                            title = { Text(stringResource(R.string.discord_activity_button1_url)) },
+                            icon = { Icon(painterResource(R.drawable.link), null) },
+                            value = button1CustomUrl,
+                            onValueChange = onButton1CustomUrlChange,
+                            isInputValid = { true },
+                        )
+                    }
+                }
             }
         }
 
@@ -1105,6 +1194,17 @@ private fun activitySourceLabel(source: ActivitySource): String =
         ActivitySource.ALBUM -> stringResource(R.string.album_name)
         ActivitySource.SONG -> stringResource(R.string.song_title)
         ActivitySource.APP -> stringResource(R.string.app_name)
+        ActivitySource.CUSTOM -> stringResource(R.string.custom)
+    }
+
+@Composable
+private fun discordUrlSourceLabel(value: String): String =
+    when (value.lowercase()) {
+        "songurl" -> stringResource(R.string.discord_url_source_song)
+        "artisturl" -> stringResource(R.string.discord_url_source_artist)
+        "albumurl" -> stringResource(R.string.discord_url_source_album)
+        "custom" -> stringResource(R.string.discord_url_source_custom)
+        else -> value
     }
 
 @Composable
@@ -1217,6 +1317,9 @@ fun RichPresence(
     nameSource: ActivitySource = ActivitySource.APP,
     detailsSource: ActivitySource = ActivitySource.SONG,
     stateSource: ActivitySource = ActivitySource.ARTIST,
+    nameCustomText: String = "",
+    detailsCustomText: String = "",
+    stateCustomText: String = "",
     activityType: String = "LISTENING",
     largeImageType: String = "thumbnail",
     largeImageCustomUrl: String = "",
@@ -1228,10 +1331,10 @@ fun RichPresence(
     button1Enabled: Boolean = true,
     button1UrlSource: String = "songurl",
     button1CustomUrl: String = "",
-    button2Label: String = "Go to ArchiveTune",
-    button2Enabled: Boolean = true,
+    button2Label: String = "",
+    button2Enabled: Boolean = false,
     button2UrlSource: String = "custom",
-    button2CustomUrl: String = "https://github.com/rukamori/ArchiveTune",
+    button2CustomUrl: String = "",
     isPlaying: Boolean = false,
 ) {
     val context = LocalContext.current
@@ -1272,17 +1375,18 @@ fun RichPresence(
             }
         }
 
-    fun previewSourceValue(source: ActivitySource): String =
+    fun previewSourceValue(source: ActivitySource, customText: String = ""): String =
         when (source) {
             ActivitySource.ARTIST -> song?.artists?.firstOrNull()?.name ?: artistNameFallback
             ActivitySource.ALBUM -> song?.song?.albumName ?: song?.album?.title ?: albumNameFallback
             ActivitySource.SONG -> song?.song?.title?.ifBlank { songTitleFallback } ?: songTitleFallback
             ActivitySource.APP -> appName
+            ActivitySource.CUSTOM -> customText.ifBlank { appName }
         }
 
-    val previewName = previewSourceValue(nameSource)
-    val previewDetails = previewSourceValue(detailsSource)
-    val previewState = previewSourceValue(stateSource)
+    val previewName = previewSourceValue(nameSource, nameCustomText)
+    val previewDetails = previewSourceValue(detailsSource, detailsCustomText)
+    val previewState = previewSourceValue(stateSource, stateCustomText)
     val previewLargeText =
         when (largeTextSource.lowercase()) {
             "song" -> previewSourceValue(ActivitySource.SONG)
