@@ -117,7 +117,7 @@ object YTPlayerUtils {
      * - the correct metadata (like loudnessDb)
      * - premium formats
      */
-    private val MAIN_CLIENT: YouTubeClient = WEB_REMIX
+    private val MAIN_CLIENT: YouTubeClient = IOS
 
     /**
      * Clients used for fallback streams in case the streams of the main client do not work.
@@ -363,15 +363,15 @@ object YTPlayerUtils {
     ): YouTubeClient =
         when (preferredStreamClient) {
             PlayerStreamClient.WEB_REMIX -> {
-                WEB_REMIX
+                IOS
             }
 
             PlayerStreamClient.ARCHIVETUNE_EXTRACTOR -> {
-                if (authState.hasPlaybackLoginContext) ANDROID_MUSIC else WEB_REMIX
+                if (authState.hasPlaybackLoginContext) ANDROID_MUSIC else IOS
             }
 
             PlayerStreamClient.HI_RES_LOSSLESS -> {
-                WEB_REMIX
+                IOS
             }
 
             PlayerStreamClient.IOS -> {
@@ -387,7 +387,7 @@ object YTPlayerUtils {
             }
 
             else -> {
-                WEB_REMIX
+                IOS
             }
         }
 
