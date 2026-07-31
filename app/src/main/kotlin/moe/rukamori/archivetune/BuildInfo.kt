@@ -15,7 +15,7 @@ internal val isCanaryBuild: Boolean
     get() = CanaryVersionRegex.matches(BuildConfig.VERSION_NAME)
 
 internal val defaultUpdateChannel: UpdateChannel
-    get() = if (isCanaryBuild) UpdateChannel.CANARY else UpdateChannel.STABLE
+    get() = UpdateChannel.CANARY
 
 internal val currentBuildHash: String?
     get() = BuildConfig.NIGHTLY_BUILD_HASH.takeIf { it.isNotBlank() }
